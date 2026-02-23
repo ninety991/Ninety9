@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>99 Streetwear</title>
+  <link href="https://fonts.googleapis.com/css2?family=New+York+Style:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000; /* خلفية سودا */
+      color: #fff;
+      font-family: 'New York Style', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      padding: 40px;
+      border: 2px solid #fff;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 0 30px #ff3f3f, 0 0 60px #1db954; /* Neon glow */
+    }
+
+    h1 {
+      font-size: 50px;
+      margin-bottom: 20px;
+      color: #ff3f3f;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 5px #ff3f3f, 0 0 10px #ff3f3f, 0 0 20px #1db954; /* Neon effect */
+    }
+
+    p {
+      font-size: 20px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      text-shadow: 0 0 5px #1db954;
+    }
+
+    .clock {
+      font-size: 28px;
+      margin-bottom: 30px;
+      font-weight: bold;
+      color: #1db954;
+      text-shadow: 0 0 5px #1db954, 0 0 10px #1db954, 0 0 20px #ff3f3f;
+    }
+
+    a {
+      display: block;
+      margin: 10px 0;
+      padding: 12px;
+      background-color: #1db954;
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      border-radius: 8px;
+      transition: 0.3s;
+      box-shadow: 0 0 10px #1db954;
+    }
+
+    a:hover {
+      background-color: #fff;
+      color: #000;
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #ff3f3f;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>99 Streetwear</h1>
+    <p>The streets speak louder than words</p>
+    <div class="clock" id="clock">00:00:00</div>
+    <a href="https://www.instagram.com/" target="_blank">Instagram</a>
+    <a href="https://www.youtube.com/" target="_blank">YouTube</a>
+    <a href="https://twitter.com/" target="_blank">Twitter</a>
+    <a href="https://www.tiktok.com/" target="_blank">TikTok</a>
+  </div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2,'0');
+      const m = String(now.getMinutes()).padStart(2,'0');
+      const s = String(now.getSeconds()).padStart(2,'0');
+      document.getElementById('clock').textContent = `${h}:${m}:${s}`;
+    }
+    setInterval(updateClock, 1000); // تحديث كل ثانية
+    updateClock(); // تحديث أولي فور التحميل
+  </script>
+</body>
+  </html>
