@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ninety9 Store</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  /* الخلفية */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    background: url('2d.png') no-repeat center center fixed;
+    background-size: cover;
+    filter: blur(4px);
+  }
+
+  /* محتوى فوق الخلفية */
+  #content {
+    position: relative;
+    z-index: 1;
+    backdrop-filter: none;
+    padding: 20px;
+  }
+
+  /* الساعه الحيه */
+  #liveClock {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    color: #fff;
+    text-align: right;
+    margin: 10px 0;
+  }
+
+  /* رأس الموقع – الانستجرام */
+  #instagramName {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  #instagramName img {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* المنتجات */
+  .product {
+    background-color: #111;
+    color: #fff;
+    padding: 15px;
+    margin: 15px;
+    border-radius: 15px;
+    width: 250px;
+    display: inline-block;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(255,255,255,0.2);
+  }
+
+  .product img {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .productOptions {
+    background-color: #000;
+    border: 2px solid #c0c0c0;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .productOptions label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+
+  .productOptions select {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  /* زر الشراء */
+  .buyBtn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #c0c0c0;
+    color: #000;
+  }
+
+  /* Checkout Form */
+  #checkoutForm {
+    background-color: #111;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 20px;
+    width: 400px;
+  }
+
+  #checkoutForm label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: 600;
+  }
+
+  #checkoutForm input, #checkoutForm select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+
+  #checkoutForm img.walletLogo {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+
+  #checkoutButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    background-color: #c0c0c0;
+    color: #000;
+    margin-top: 10px;
+  }
+
+  /* رسالة Thank You */
+  #thankYouMessage {
+    display: none;
+    background-color: #000;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    text-align: center;
+    padding: 30px;
+    border: 2px solid #c0c0c0;
+    border-radius: 15px;
+    margin: 20px auto;
+    width: 80%;
+    box-shadow: 0 0 15px rgba(255,255,255,0.3);
+  }
+</style>
+</head>
+<body>
+<div id="content">
+
+  <!-- الساعة الحية -->
+  <div id="liveClock">00:00:00</div>
+
+  <!-- Instagram -->
+  <div id="instagramName">
+    <img src="ig.png" alt="Instagram">
+    Ninety9.egy
+  </div>
+
+  <!-- المنتجات -->
+  <div class="product">
+    <img src="T.png" alt="T-shirt">
+    <p class="productName">T-shirt 99 over sized</p>
+    <p class="price">650 EGP</p>
+    <button class="buyBtn">Buy</button>
+    <div class="productOptions">
+      <label>Size:</label>
+      <select class="sizeSelect">
+        <option>L</option>
+        <option>XL</option>
+        <option>XXL</option>
+      </select>
+      <label>Color:</label>
+      <select class="colorSelect">
+        <option>Black</option>
+        <option>White</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="product">
+    <img src="Sweet.png" alt="Sweet Pants">
+    <p class="productName">Sweet Pants 99</p>
+    <p class="price">750 EGP</p>
+    <button class="buyBtn">Buy</button>
+    <div class="productOptions">
+      <label>Size:</label>
+      <select class="sizeSelect">
+        <option>L</option>
+        <option>XL</option>
+        <option>XXL</option>
+      </select>
+      <label>Color:</label>
+      <select class="colorSelect">
+        <option>Black</option>
+        <option>White</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Checkout Form -->
+  <form id="checkoutForm">
+    <label>Name:</label>
+    <input type="text" id="custName" required>
+
+    <label>Phone:</label>
+    <input type="text" id="custPhone" required>
+    <img src="e.png" class="walletLogo" alt="E-wallet">
+
+    <label>Province:</label>
+    <select id="province">
+      <option value="Giza">Giza</option>
+      <option value="Cairo">Cairo</option>
+    </select>
+
+    <label>Region:</label>
+    <select id="region"></select>
+
+    <label>Address:</label>
+    <input type="text" id="address" required>
+
+    <label>Building Number:</label>
+    <input type="text" id="building" required>
+
+    <label>Apartment Number:</label>
+    <input type="text" id="apartment" required>
+
+    <label>Payment Method:</label>
+    <select id="paymentMethod">
+      <option value="ewallet">E-wallet</option>
+      <option value="cod">Cash on Delivery</option>
+    </select>
+
+    <label>Upload Screenshot (if E-wallet):</label>
+    <input type="file" id="paymentScreenshot">
+
+    <button id="checkoutButton">Checkout</button>
+  </form>
+
+  <!-- رسالة Thank You -->
+  <div id="thankYouMessage">Thank you for your trust in 99</div>
+
+</div>
+
+<script>
+  // الساعة الحية
+  function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2,'0');
+    const minutes = String(now.getMinutes()).padStart(2,'0');
+    const seconds = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('liveClock').textContent = `${hours}:${minutes}:${seconds}`;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // منتجات Buy → تظهر الاختيارات
+  const buyButtons = document.querySelectorAll('.buyBtn');
+  buyButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const options = btn.nextElementSibling;
+      options.style.display = options.style.display === 'none' ? 'block' : 'none';
+    });
+  });
+
+  // تحديث المناطق حسب المحافظة
+  const provinceSelect = document.getElementById('province');
+  const regionSelect = document.getElementById('region');
+
+  const regions = {
+    "Giza": ["6th of October","El shikh zayed","El zamalek","El agouza","El dokki","Embaba","Bolaq el dakrour","Bolaq abu el ella"],
+    "Cairo": ["Tgamoo","Madii","Nasr city"]
+  };
+
+  function updateRegions() {
+    regionSelect.innerHTML = '';
+    const selected = provinceSelect.value;
+    regions[selected].forEach(r => {
+      const option = document.createElement('option');
+      option.value = r;
+      option.textContent = r;
+      regionSelect.appendChild(option);
+    });
+  }
+
+  provinceSelect.addEventListener('change', updateRegions);
+  updateRegions();
+
+  // Checkout → عرض رسالة Thank You
+  const checkoutButton = document.getElementById('checkoutButton');
+  checkoutButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    // هنا ممكن تضيف EmailJS أو أي كود ارسال البيانات
+
+    // عرض رسالة Thank You
+    document.getElementById('thankYouMessage').style.display = 'block';
+    window.scrollTo(0,document.getElementById('thankYouMessage').offsetTop);
+  });
+</script>
+</body>
+</html>
