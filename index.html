@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ninety9 Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:#000 url("2d.png") center/cover no-repeat;
+  color:silver;
+  text-align:center;
+}
+#loader{
+  position:fixed; width:100%; height:100vh;
+  background:#000; display:flex; justify-content:center; align-items:center; z-index:9999; flex-direction:column;
+}
+#loader img{width:120px; animation:spin 3s linear infinite;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+.instagram-name{
+  font-size:38px; font-weight:800; margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px;
+}
+.instagram-name img{width:35px;}
+
+.logo-rotate{margin-top:10px;}
+.logo-rotate img{width:110px; animation:spin 6s linear infinite;}
+
+.clock{font-size:26px; margin:10px 0 30px;}
+
+.products-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:20px; width:90%; margin:auto;
+}
+.product-card{
+  background:rgba(30,30,30,0.9); padding:15px; border-radius:18px; transition:.3s;
+}
+.product-card:hover{transform:scale(1.05);}
+.product-card img{width:100%; border-radius:12px;}
+
+.cart-container{
+  position:relative; margin:20px auto 50px auto; background:#111; padding:20px; border-radius:15px; width:90%; max-width:600px;
+  text-align:left;
+}
+.checkout{background:silver; border:none; padding:10px; width:100%; border-radius:10px; cursor:pointer;}
+
+.modal{
+  display:none; position:fixed; width:100%; height:100%; background:rgba(0,0,0,.9); top:0; left:0; justify-content:center; align-items:center;
+}
+.modal-content{
+  background:#111; padding:25px; border-radius:15px; width:320px; text-align:left;
+}
+
+.size-btn,.color-btn{
+  padding:8px 12px; margin:4px; border:none; border-radius:8px; cursor:pointer;
+}
+.size-btn{background:#333;color:#fff;}
+.color-btn.black{background:#000;}
+.color-btn.white{background:#fff;color:#000;}
+
+.thanks-box{
+  background:#000; border:1px solid silver; padding:20px; border-radius:15px; margin-top:15px; font-size:18px; text-align:center;
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader"><img src="3d.png"></div>
+
+<!-- SOUNDS -->
+<audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
+<div class="instagram-name"><img src="ig.png"> Ninety9.egy </div>
+<div class="logo-rotate"><img src="3d.png"></div>
+<div class="clock" id="clock"></div>
+
+<!-- PRODUCTS GRID -->
+<div class="products-grid" id="productsGrid"></div>
+
+<!-- CART -->
+<div class="cart-container">
+  <h3>Cart</h3>
+  <div id="cartItems"></div>
+  <p>Total: <span id="cartTotal">0</span> EGP</p>
+  <button class="checkout" id="checkoutBtn">Checkout</button>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal" id="checkoutModal">
+<div class="modal-content">
+<h3>Checkout</h3>
+<form id="checkoutForm">
+<input type="text" id="name" placeholder="Full Name" required>
+<input type="tel" id="phone" placeholder="Phone Number" required>
+
+<select id="governorate" required>
+  <option value="">Governorate</option>
+  <option value="Giza">Giza</option>
+  <option value="Cairo">Cairo</option>
+</select>
+
+<select id="area" required>
+  <option value="">Area</option>
+</select>
+
+<textarea id="address" placeholder="Full Address" required></textarea>
+<input type="text" id="building" placeholder="Building Number" required>
+<input type="text" id="apartment" placeholder="Apartment Number" required>
+
+<p style="display:flex;align-items:center;gap:10px;">
+<img src="e.png" width="22"> 01142479550
+</p>
+
+<p>Payment Method:</p>
+<input type="text" value="E-Wallet Only" readonly style="width:100%; padding:8px; border-radius:5px; border:none; background:#333; color:#fff;">
+
+<input type="file" required>
+
+<label style="font-size:14px;">
+<input type="checkbox" required> I agree to terms and conditions
+</label>
+
+<button class="checkout">Confirm Order</button>
+</form>
+
+<div id="thanksMessage"></div>
+</div>
+</div>
+
+<script>
+// LOADER
+window.onload=()=>{
+setTimeout(()=>{document.getElementById("loader").style.display="none";},1500);
+};
+
+// SOUNDS
+const clickSound = document.getElementById('clickSound');
+function playClick(){clickSound.currentTime=0; clickSound.play();}
+
+// CLOCK
+setInterval(()=>{
+const d=new Date();
+document.getElementById("clock").innerText=d.toLocaleTimeString();
+},1000);
+
+// PRODUCTS
+const products=[
+{name:"T-shirt 99 OverSized",price:650,img:"T.png"},
+{name:"Sweet Pants 99",price:750,img:"Sweet.png"}
+];
+let cart=[];
+
+function renderProducts(){
+const grid=document.getElementById("productsGrid");
+grid.innerHTML="";
+products.forEach(p=>{
+const div=document.createElement("div");
+div.className="product-card";
+div.innerHTML=`<img src="${p.img}"><h3>${p.name}</h3><p>${p.price} EGP</p>
+<button onclick='addToCart("${p.name}",${p.price})'>Add</button>`;
+grid.appendChild(div);
+});
+}
+
+function addToCart(name,price){
+playClick();
+cart.push({name,price});
+renderCart();
+}
+
+function renderCart(){
+let total=0;
+const box=document.getElementById("cartItems");
+box.innerHTML="";
+cart.forEach(i=>{
+total+=i.price;
+box.innerHTML+=`<p>${i.name}</p>`;
+});
+document.getElementById("cartTotal").innerText=total;
+}
+
+renderProducts();
+
+// CHECKOUT MODAL
+document.getElementById("checkoutBtn").onclick=()=>{
+playClick();
+document.getElementById("checkoutModal").style.display="flex";
+};
+
+// Governorate areas
+const areas={
+"Giza":["6th of October","El Shikh Zayed","El Zamalek","El Agouza","El Dokki","Imbaba","Bolaq El Dakrour","Bolaq Abu El Ella"],
+"Cairo":["Tgamoo","Nasr City","Maadi"]
+};
+document.getElementById("governorate").addEventListener('change',()=>{
+const gov=document.getElementById("governorate").value;
+const areaSelect=document.getElementById("area");
+areaSelect.innerHTML='<option value="">Area</option>';
+if(areas[gov]){areas[gov].forEach(a=>{let opt=document.createElement("option"); opt.value=a; opt.textContent=a; areaSelect.appendChild(opt);});}
+});
+
+// Shipping cost
+function shippingCost(gov){return gov==="Giza"?50:gov==="Cairo"?75:0;}
+
+// Submit Order
+document.getElementById("checkoutForm").onsubmit=(e)=>{
+e.preventDefault();
+playClick();
+const name=document.getElementById("name").value;
+const phone=document.getElementById("phone").value;
+const gov=document.getElementById("governorate").value;
+const area=document.getElementById("area").value;
+const address=document.getElementById("address").value;
+const building=document.getElementById("building").value;
+const apartment=document.getElementById("apartment").value;
+
+let ship=shippingCost(gov);
+let total=cart.reduce((s,i)=>s+i.price,0)+ship;
+
+let message=`New Order - 99 Store
+Name: ${name}
+Phone: ${phone}
+Governorate: ${gov}
+Area: ${area}
+Address: ${address}
+Building: ${building}
+Apartment: ${apartment}
+
+Products:\n`;
+cart.forEach(p=>{message+=`${p.name} - ${p.price} EGP\n`;});
+message+=`\nShipping: ${ship}\nTotal: ${total} EGP`;
+
+// WhatsApp notification
+const number="201142479550";
+const url="https://wa.me/"+number+"?text="+encodeURIComponent(message);
+window.open(url,"_blank");
+
+// Show thank you
+document.getElementById("thanksMessage").innerHTML='<div class="thanks-box">Thank you for your trust in 99</div>';
+cart=[];
+renderCart();
+};
+</script>
+</body>
+</html>
