@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ninety9 Store</title>
+<link href="https://fonts.googleapis.com/css2?family=New+York+Style:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body {
+  margin:0; padding:0; font-family:'New York Style', sans-serif; color:#c0c0c0;
+  background-color:#000; background-image: url('2d.png'); background-size: cover; background-position:center;
+  display:flex; flex-direction:column; align-items:center; min-height:100vh;
+}
+.instagram-container { display:flex; align-items:center; margin-top:20px; }
+.instagram-name { font-size:36px; font-weight:900; color:silver; text-shadow: 0 0 5px #fff,0 0 10px #aaa; margin-right:10px;}
+.instagram-logo { width:36px; height:36px; }
+.tagline { font-size:20px; font-weight:bold; margin:10px 0 30px 0; color:silver; text-align:center; text-shadow: 0 0 5px #fff; }
+.clock { font-size:28px; font-weight:bold; margin-bottom:30px; color:silver; text-align:center; }
+.products-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:20px; width:90%; max-width:800px; margin-bottom:30px; }
+.product-card { background-color:rgba(50,50,50,0.8); padding:10px; border-radius:15px; text-align:center; position:relative; cursor:pointer; transition: transform 0.2s; }
+.product-card:hover { transform: scale(1.05); }
+.product-card img { width:100%; height:180px; object-fit:cover; border-radius:10px; }
+.product-card h3 { margin:10px 0 5px 0; font-size:18px; color:silver; }
+.product-card p { margin:0 0 10px 0; font-size:16px; color:silver; }
+.cart-container { position:fixed; bottom:10px; right:10px; width:300px; background:rgba(30,30,30,0.9); padding:20px; border-radius:15px; }
+.cart-container h3 { margin-top:0; color:silver; text-align:center; }
+.cart-item { display:flex; justify-content:space-between; margin:5px 0; color:silver; }
+.checkout { margin-top:15px; padding:12px; background-color:silver; color:black; font-weight:bold; border:none; border-radius:10px; cursor:pointer; width:100%; font-size:16px; }
+.checkout:hover { background-color:#fff; transform:scale(1.02); }
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); justify-content:center; align-items:center; z-index:1000; overflow:auto; }
+.modal-content { background:rgba(20,20,20,1); padding:30px; border-radius:15px; text-align:center; color:silver; max-width:400px; margin:20px; }
+.modal-content img { width:100%; height:auto; border-radius:10px; margin-bottom:10px; }
+.size-btn, .color-btn { padding:10px 15px; margin:5px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; color:#fff; }
+.size-btn { background:#555; }
+.color-btn.black { background:#000; }
+.color-btn.white { background:#fff; color:#000; }
+.checkout-form input, .checkout-form textarea, .checkout-form select { width:100%; margin-bottom:10px; padding:8px; border-radius:5px; border:none; }
+.close-btn { margin-top:10px; padding:10px 20px; background:silver; color:black; border:none; border-radius:10px; cursor:pointer; font-weight:bold; }
+.close-btn:hover { background:#fff; transform:scale(1.05); }
+.thank-box { display:none; background:rgba(0,0,0,0.9); color:silver; padding:20px; border-radius:15px; margin-top:20px; text-align:center; }
+.thank-box img { width:100px; margin-top:10px; animation:spin 3s linear infinite; }
+@keyframes spin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+</style>
+</head>
+<body>
+
+<div class="instagram-container">
+  <div class="instagram-name">Ninety9.egy</div>
+  <img src="ig.png" class="instagram-logo">
+</div>
+
+<div class="tagline">This isn't just any brand</div>
+
+<div class="clock" id="clock">00:00:00</div>
+
+<div class="products-grid" id="productsGrid"></div>
+
+<div class="cart-container">
+  <h3>Cart</h3>
+  <div id="cartItems"></div>
+  <p>Total: <span id="cartTotal">0</span> EGP</p>
+  <button class="checkout" id="checkoutBtn">Checkout</button>
+</div>
+
+<!-- Modal product selection -->
+<div class="modal" id="productModal">
+  <div class="modal-content" id="productModalContent">
+    <img id="modalImg" src="" alt="Product">
+    <h3 id="modalName"></h3>
+    <p id="modalPrice"></p>
+    <div>
+      <strong>Size:</strong>
+      <button class="size-btn" data-size="L">L</button>
+      <button class="size-btn" data-size="XL">XL</button>
+      <button class="size-btn" data-size="XXL">XXL</button>
+    </div>
+    <div>
+      <strong>Color:</strong>
+      <button class="color-btn black" data-color="Black"></button>
+      <button class="color-btn white" data-color="White"></button>
+    </div>
+    <button class="close-btn" id="closeProductModal">Close</button>
+  </div>
+</div>
+
+<!-- Modal checkout -->
+<div class="modal" id="checkoutModal">
+  <div class="modal-content">
+    <h3>Checkout</h3>
+    <form id="checkoutForm" class="checkout-form">
+      <input type="text" id="name" placeholder="Full Name" required>
+      <input type="tel" id="phone" placeholder="Phone Number" required>
+      <select id="governorate" required>
+        <option value="">Select Governorate</option>
+        <option value="Giza">Giza</option>
+        <option value="Cairo">Cairo</option>
+      </select>
+      <select id="area" required>
+        <option value="">Select Area</option>
+      </select>
+      <textarea id="address" placeholder="Full Address" required></textarea>
+      <input type="text" id="building" placeholder="Building / Villa Number" required>
+      <input type="text" id="apartment" placeholder="Apartment Number" required>
+      <select id="paymentMethod" required>
+        <option value="wallet">Mobile Wallet Payment</option>
+      </select>
+      <p>Pay to wallet number: 01144108775 <img src="e.png" style="width:25px;vertical-align:middle;"></p>
+      <input type="file" id="paymentProof" required>
+      <button type="submit" class="close-btn">Submit Order</button>
+    </form>
+    <button class="close-btn" id="closeCheckoutModal">Close</button>
+  </div>
+</div>
+
+<div class="thank-box" id="thankBox">
+  <p>Thank you for your trust in 99</p>
+  <img src="3d.png">
+</div>
+
+<script>
+/* Clock */
+function updateClock(){
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent = `${h}:${m}:${s}`;
+}
+setInterval(updateClock,1000);
+updateClock();
+
+/* Products */
+const products = [
+  {id:1,name:"T-shirt 99 Over Sized",price:650,discountPrice:550,img:"T.png"},
+  {id:2,name:"Sweet Pants 99",price:750,discountPrice:650,img:"Sweet.png"},
+];
+products.forEach(p=>{
+  p.discountPercent = Math.round(((p.price - p.discountPrice)/p.price)*100);
+});
+
+let cart = [];
+const productsGrid = document.getElementById('productsGrid');
+const cartItems = document.getElementById('cartItems');
+const cartTotal = document.getElementById('cartTotal');
+const productModal = document.getElementById('productModal');
+const modalImg = document.getElementById('modalImg');
+const modalName = document.getElementById('modalName');
+const modalPrice = document.getElementById('modalPrice');
+let currentProduct=null;
+let selectedSize=null;
+let selectedColor=null;
+
+/* Render Products */
+function renderProducts(){
+  productsGrid.innerHTML='';
+  products.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='product-card';
+    card.innerHTML=`
+      <img src="${p.img}" alt="${p.name}">
+      <h3>${p.name}</h3>
+      <p>
+        <span style="text-decoration:line-through; color:#aaa;">${p.price} EGP</span>
+        &nbsp;
+        <span style="color:#ff4444; font-weight:bold;">${p.discountPercent}% OFF</span>
+        &nbsp;
+        <span style="color:silver; font-weight:bold;">${p.discountPrice} EGP</span>
+      </p>`;
+    card.onclick=()=>{
+      currentProduct=p;
+      modalImg.src=p.img;
+      modalName.textContent=p.name;
+      modalPrice.textContent=p.discountPrice+' EGP';
+      productModal.style.display='flex';
+      new Audio('click.mp3').play(); // صوت عند اختيار
+    };
+    productsGrid.appendChild(card);
+  });
+}
+
+document.querySelectorAll('.size-btn').forEach(btn=>{
+  btn.onclick=()=>{ selectedSize=btn.dataset.size; tryAddToCart(); }
+});
+document.querySelectorAll('.color-btn').forEach(btn=>{
+  btn.onclick=()=>{ selectedColor=btn.dataset.color; tryAddToCart(); }
+});
+
+function tryAddToCart(){
+  if(currentProduct && selectedSize && selectedColor){
+    cart.push({...currentProduct,size:selectedSize,color:selectedColor});
+    renderCart();
+    selectedSize=null;
+    selectedColor=null;
+    currentProduct=null;
+    productModal.style.display='none';
+  }
+}
+
+document.getElementById('closeProductModal').onclick=()=>{ productModal.style.display='none'; }
+
+function renderCart(){
+  cartItems.innerHTML='';
+  let total=0;
+  cart.forEach(item=>{
+    const div=document.createElement('div');
+    div.className='cart-item';
+    div.textContent=`${item.name} - ${item.size} - ${item.color} - ${item.discountPrice} EGP`;
+    cartItems.appendChild(div);
+    total+=item.discountPrice;
+  });
+  cartTotal.textContent=total;
+}
+
+/* Checkout */
+const checkoutBtn=document.getElementById('checkoutBtn');
+const checkoutModal=document.getElementById('checkoutModal');
+const closeCheckoutModal=document.getElementById('closeCheckoutModal');
+const checkoutForm=document.getElementById('checkoutForm');
+const governorateSelect=document.getElementById('governorate');
+const areaSelect=document.getElementById('area');
+
+const areas={
+  "Giza":["6th of October","El Shikh Zayed","El Zamalek","El Agouza","El Dokki","Embaba","Bolaq El Dakrour","Bolaq Abu El Ella"],
+  "Cairo":["Tgamoo","Nasr City","Maadi"]
+};
+
+governorateSelect.addEventListener('change',()=>{
+  const gov=governorateSelect.value;
+  areaSelect.innerHTML='<option value="">Select Area</option>';
+  if(areas[gov]){
+    areas[gov].forEach(a=>{
+      const opt=document.createElement('option');
+      opt.value=a; opt.textContent=a;
+      areaSelect.appendChild(opt);
+    });
+  }
+});
+
+checkoutBtn.onclick=()=>{
+  if(cart.length===0){ alert("Cart is empty!"); return;}
+  checkoutModal.style.display='flex';
+}
+
+closeCheckoutModal.onclick=()=>{ checkoutModal.style.display='none'; }
+
+checkoutForm.onsubmit=(e)=>{
+  e.preventDefault();
+  const gov = governorateSelect.value;
+  const deliveryFee = (gov==="Giza"?50:75);
+  const formData={
+    name:document.getElementById('name').value,
+    phone:document.getElementById('phone').value,
+    governorate:gov,
+    area:areaSelect.value,
+    address:document.getElementById('address').value,
+    building:document.getElementById('building').value,
+    apartment:document.getElementById('apartment').value,
+    paymentMethod:document.getElementById('paymentMethod').value,
+    paymentProof:document.getElementById('paymentProof').files[0]?document.getElementById('paymentProof').files[0].name:"Not uploaded",
+    total:cart.reduce((sum,item)=>sum+item.discountPrice,0) + deliveryFee,
+    deliveryFee:deliveryFee
+  };
+  alert(`Order submitted!\nTotal: ${formData.total} EGP (Delivery ${deliveryFee} EGP)\nThank you for your trust in 99`);
+  checkoutModal.style.display='none';
+  cart=[];
+  renderCart();
+  document.getElementById('thankBox').style.display='block';
+}
+
+renderProducts();
+</script>
+</body>
+</html>
